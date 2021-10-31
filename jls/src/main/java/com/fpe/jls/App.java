@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fpe.jls.model.Persons;
@@ -113,7 +114,40 @@ public class App {
 
 		List<Persons> filtereedList7 = persons.stream().sorted(byNameAsc).collect(Collectors.toList());
 		
-		App.printList(filtereedList7);
+//		App.printList(filtereedList7);
+		
+		//4.- Match (param: Predicate)   (No existe el match, sólo anyMatch, allMatch y noneMatch 
+		
+		// anyMatch: No valua todo el stream, termina en la primera coincidencia
+		
+		boolean resultado1 = persons.stream().anyMatch(p -> p.getName().startsWith("J")); //retorna True o False
+		
+//		System.out.println(resultado1);
+		
+		// allMatch: Evalua todo el stream bajo la condición (sólo es True si todo el predicate cumple la condición)
+		
+		boolean resultado2 = persons.stream().allMatch(p -> p.getName().startsWith("J")); //retorna True o False
+		
+//		System.out.println(resultado2);
+		
+		// noneMatch: Evalua todo el stream bajo la condición (sólo es True si todo el predicate NO cumple la condición)
+		
+		boolean resultado3 = persons.stream().noneMatch(p -> p.getName().startsWith("J")); //retorna True o False
+		
+		System.out.println(resultado3);
+		
+		// Using Predicate
+		// las últmas tres funciones empleadas con los Match utilizan el mismo Predicate, por lo que podríamos crear
+		// un Predicate genérico para usarlo en dichos Match
+		
+		Predicate<Persons> startsWithPredicate = p -> p.getName().startsWith("J");
+		
+		boolean resultado4 = persons.stream().anyMatch(startsWithPredicate); //retorna True o False
+
+		System.out.println(resultado4);
+		
+		
+		
 
 	}
 
