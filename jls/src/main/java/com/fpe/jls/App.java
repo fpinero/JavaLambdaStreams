@@ -134,7 +134,7 @@ public class App {
 		
 		boolean resultado3 = persons.stream().noneMatch(p -> p.getName().startsWith("J")); //retorna True o False
 		
-		System.out.println(resultado3);
+//		System.out.println(resultado3);
 		
 		// Using Predicate
 		// las últmas tres funciones empleadas con los Match utilizan el mismo Predicate, por lo que podríamos crear
@@ -144,10 +144,23 @@ public class App {
 		
 		boolean resultado4 = persons.stream().anyMatch(startsWithPredicate); //retorna True o False
 
-		System.out.println(resultado4);
+//		System.out.println(resultado4);
 		
+		 // 5.- Limit/Skip
 		
+		int pageNumber = 0;
+		int pageSize = 2;
+		List<Persons> filteredList4 = persons.stream().skip(pageNumber * pageSize) // comienza desde la posición 0 de la lista
+													  .limit(pageSize) // sólo se trae dos elementos
+													  .collect(Collectors.toList());
 		
+//		System.out.println(filteredList4);
+		
+		// 6.- Collector
+		// GroupBy
+		
+		products.stream().filter(p -> p.getPrice() > 20)
+						 .collect(Collectors.groupingBy(Products::getPrice));
 
 	}
 
