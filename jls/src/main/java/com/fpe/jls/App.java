@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -159,9 +162,64 @@ public class App {
 		// 6.- Collector
 		// GroupBy
 		
-		products.stream().filter(p -> p.getPrice() > 20)
-						 .collect(Collectors.groupingBy(Products::getPrice));
+		Map<Double, List<Products>> collect1 = products.stream().filter(p -> p.getPrice() > 20)
+						 .collect(Collectors.groupingBy(Products::getPrice)); //devuelve un Mapa de precios, lista de products
 
+//		System.out.println(collect1);
+		
+		//mismo ejemplo que el anterior pero ahora al agrupar por el nombre cambia a clave del Mapa a String
+		Map<String, List<Products>> collect2 = products.stream().filter(p -> p.getPrice() > 20)
+				 .collect(Collectors.groupingBy(Products::getName)); //devuelve un Mapa de Nombre de productos, lista de products
+
+//		System.out.println(collect2);
+
+		//Counting
+		
+		Map<String, Long> collect3 = products.stream().collect(Collectors.groupingBy(Products::getName, Collectors.counting()));
+		// es de tipo String, Long pq agrupo por el nombre y el counting es el número de coincidencias de dicho nombre 
+		// que lo devuelve en un long
+		
+//		System.out.println(collect3);
+		
+		//Agrupando por nombre del producto y sumando
+		
+		Map<String, Double> collect4 = products.stream()
+											 .collect(Collectors.groupingBy(
+													 Products::getName, 
+													 Collectors.summingDouble(Products::getPrice)
+													 )
+											);
+		
+//		System.out.println(collect4);
+		
+		// Obtener la suma y el resumen
+		
+		DoubleSummaryStatistics statistics =  products.stream()
+				.collect(Collectors.summarizingDouble(Products::getPrice)); // al usar el método summarizingDouble 
+																			// nos devuelve un mapa de estadísticas
+																			// del tipo DoubleSummaryStatistics
+																			// donde luego podemos quedarnos con lo que nos 
+																			// interese de lo que devuelve
+																			// DoubleSummaryStatistics{count=4, sum=91,000000, min=15,000000, average=22,750000, max=35,500000}
+		
+//		System.out.println(statistics);
+		
+		//mismo ejemplo que el previo pero en esta ocasón sólo cogiendo el promedio
+		DoubleSummaryStatistics statisticsPromedio =  products.stream()
+				.collect(Collectors.summarizingDouble(Products::getPrice)); 
+		
+//		System.out.println(statisticsPromedio.getAverage());  //pillamos el promedio
+		
+		// 7.- Optional  (para evitar los JavaNullException)
+		
+		Optional<Double> sum = products.stream()
+						.map(Products::getPrice)
+						.reduce(Double::sum); // en este caso queremos que "reduzca" los precios a la suma de los mismos
+											  // en caso de que algún producto no tuviese precio se lanzaría una Excepción
+											  // con el optimal, sum sólo tiene valor si la operación se puede llevar a cabo
+		
+		System.out.println(sum.get());
+		
 	}
 
 	public static int getAge(LocalDate birthDate) {
